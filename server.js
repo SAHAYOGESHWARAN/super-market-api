@@ -13,5 +13,13 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/admins', adminRoutes);
 
+//port
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+//listen
+app.listen(PORT, () => {
+  console.log(
+    `Node Server Running In ${process.env.DEV_MODE} Mode on port no ${PORT}`
+
+  );
+});
