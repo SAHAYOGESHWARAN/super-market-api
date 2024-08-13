@@ -51,37 +51,42 @@ const updateProduct = async (req, res) => {
     const { productId } = req.params;
 
     try {
+        // Find the product by its productId
         const product = await Product.findOne({ productId });
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
+        // Update the product details
         product.name = req.body.name || product.name;
         product.price = req.body.price || product.price;
 
-        // Assuming req.user is already populated by the `protect` middleware
-        product.updatedBy = req.user ? req.user._id : null; // Using req.user._id for user or admin
+        // Capture who updated the product
+        product.updatedBy = req.user ? req.user._id : null;
         product.updatedAt = Date.now();
 
+        // Save the updated product
         const updatedProduct = await product.save();
 
+        // Respond with the updated product details
         res.json({
             _id: updatedProduct._id,
             name: updatedProduct.name,
             price: updatedProduct.price,
             productId: updatedProduct.productId,
             updatedBy: {
-                id: product.updatedBy,
-                // If you want to show the name, you'll need to populate it before sending response
+                id: updatedProduct.updatedBy,
                 name: req.user ? req.user.name : "Unknown"
             },
             updatedAt: updatedProduct.updatedAt,
         });
     } catch (error) {
-        return res.status(400).json({ message: 'Error updating product', error: error.message });
+        console.error(error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
 
 // Export all functions
 module.exports = { addProduct, getProducts, getProductById, updateProduct };
