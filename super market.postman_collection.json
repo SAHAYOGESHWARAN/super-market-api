@@ -174,10 +174,62 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmFkMzM1ODJkNjIwNmU0YWRiNTI1MyIsImlhdCI6MTcyMzUxOTgyNywiZXhwIjoxNzI2MTExODI3fQ.GhKR2IT4acmVrkFfxTwyEISdhC7lJlLZhhFXGcGVqC4",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
 						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/products/update/P006",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"products",
+						"update",
+						"P006"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateproduct req",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmFkMzM1ODJkNjIwNmU0YWRiNTI1MyIsImlhdCI6MTcyMzUxOTgyNywiZXhwIjoxNzI2MTExODI3fQ.GhKR2IT4acmVrkFfxTwyEISdhC7lJlLZhhFXGcGVqC4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n\r\n \"productId\": \"EGGM10\",\r\n    \"name\": \"Egg Msggi\",\r\n    \"price\": 50\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:5000/api/products/update/",
 					"protocol": "http",
@@ -196,7 +248,7 @@
 			"response": []
 		},
 		{
-			"name": "updateproduct req",
+			"name": "Get Product",
 			"request": {
 				"method": "GET",
 				"header": []
@@ -204,7 +256,44 @@
 			"response": []
 		},
 		{
-			"name": "Get Product",
+			"name": "New Request",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmFkMzM1ODJkNjIwNmU0YWRiNTI1MyIsImlhdCI6MTcyMzUyMTI0OSwiZXhwIjoxNzI2MTEzMjQ5fQ.YQUBfqo36l_xw0lWGlO-FJ8MJ0rL2arAjWw9SinOUYQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/products/list/P001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"products",
+						"list",
+						"P001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
 			"request": {
 				"method": "GET",
 				"header": []
