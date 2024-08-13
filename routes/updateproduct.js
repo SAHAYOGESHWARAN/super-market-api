@@ -5,6 +5,6 @@ const protect = require('../middleware/authMiddleware'); // Ensure this middlewa
 const router = express.Router();
 
 // Admin updates a product (protected route)
-router.put('/update/:id', protect, updateProduct);
+router.put('/update/:productId', protect, updateProduct);
 
 module.exports = router;

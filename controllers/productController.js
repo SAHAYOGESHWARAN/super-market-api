@@ -1,6 +1,5 @@
 const Product = require('../models/product');
-const User = require('../models/user');
-const Admin = require('../models/admin');
+const User = require('../models/user'); // Import User model
 const mongoose = require('mongoose');
 
 // Add a new product
@@ -20,9 +19,10 @@ const addProduct = async (req, res) => {
 
     if (product) {
         res.status(201).json({
-            productId: product.productId,
+            _id: product._id,
             name: product.name,
             price: product.price,
+            productId: product.productId,
         });
     } else {
         res.status(400).json({ message: 'Invalid product data' });
@@ -37,9 +37,7 @@ const getProducts = async (req, res) => {
 
 // Get a single product by productId
 const getProductById = async (req, res) => {
-    const { productId } = req.params;
-
-    const product = await Product.findOne({ productId });
+    const product = await Product.findOne({ productId: req.params.productId });
 
     if (product) {
         res.json(product);
@@ -48,40 +46,35 @@ const getProductById = async (req, res) => {
     }
 };
 
-// Update a product
+// Update a product by productId
 const updateProduct = async (req, res) => {
     const { productId } = req.params;
 
-    // Check if the provided productId is valid
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-        return res.status(400).json({ message: 'Invalid product ID' });
-    }
-
     try {
-        // Find the product by productId
         const product = await Product.findOne({ productId });
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        // Update product details
         product.name = req.body.name || product.name;
         product.price = req.body.price || product.price;
 
-        // Assuming req.user or req.admin is already populated
-        product.updatedBy = req.user ? req.user._id : req.admin._id;
+        // Assuming req.user is already populated by the `protect` middleware
+        product.updatedBy = req.user ? req.user._id : null; // Using req.user._id for user or admin
         product.updatedAt = Date.now();
 
         const updatedProduct = await product.save();
 
         res.json({
-            productId: updatedProduct.productId,
+            _id: updatedProduct._id,
             name: updatedProduct.name,
             price: updatedProduct.price,
+            productId: updatedProduct.productId,
             updatedBy: {
-                id: updatedProduct.updatedBy,
-                name: req.user ? req.user.name : req.admin.name // Adjust based on how you're storing/updating user/admin data
+                id: product.updatedBy,
+                // If you want to show the name, you'll need to populate it before sending response
+                name: req.user ? req.user.name : "Unknown"
             },
             updatedAt: updatedProduct.updatedAt,
         });
