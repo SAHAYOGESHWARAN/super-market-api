@@ -15,4 +15,7 @@ router.get('/', getProducts);
 // User views a single product by ID
 router.get('/:id', getProductById);
 
+// Admin updates a product (protected route)
+router.put('/update/:id', protect, updateProduct);
+
 module.exports = router;
