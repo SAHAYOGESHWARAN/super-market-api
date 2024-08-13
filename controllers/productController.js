@@ -1,8 +1,7 @@
 const Product = require('../models/product');
-const User = require('../models/user'); // Import User model
-const Admin = require('../models/admin'); // Import Admin model (if applicable)
+const User = require('../models/user');
+const Admin = require('../models/admin');
 const mongoose = require('mongoose');
-
 
 // Add a new product
 const addProduct = async (req, res) => {
@@ -21,10 +20,9 @@ const addProduct = async (req, res) => {
 
     if (product) {
         res.status(201).json({
-            _id: product._id,
+            productId: product.productId,
             name: product.name,
             price: product.price,
-            productId: product.productId,
         });
     } else {
         res.status(400).json({ message: 'Invalid product data' });
@@ -37,9 +35,11 @@ const getProducts = async (req, res) => {
     res.json(products);
 };
 
-// Get a single product by ID
+// Get a single product by productId
 const getProductById = async (req, res) => {
-    const product = await Product.findById(req.params.id);
+    const { productId } = req.params;
+
+    const product = await Product.findOne({ productId });
 
     if (product) {
         res.json(product);
@@ -48,17 +48,18 @@ const getProductById = async (req, res) => {
     }
 };
 
+// Update a product
 const updateProduct = async (req, res) => {
-    const { id } = req.params; // Get the product ID from URL parameters
+    const { productId } = req.params;
 
-    // Check if the provided id is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    // Check if the provided productId is valid
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
         return res.status(400).json({ message: 'Invalid product ID' });
     }
 
     try {
-        // Find the product by the ID from URL parameters
-        const product = await Product.findById(id);
+        // Find the product by productId
+        const product = await Product.findOne({ productId });
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -72,15 +73,12 @@ const updateProduct = async (req, res) => {
         product.updatedBy = req.user ? req.user._id : req.admin._id;
         product.updatedAt = Date.now();
 
-        // Save the updated product
         const updatedProduct = await product.save();
 
-        // Send response with updated product details
         res.json({
-            _id: updatedProduct._id,
+            productId: updatedProduct.productId,
             name: updatedProduct.name,
             price: updatedProduct.price,
-            productId: updatedProduct.productId,
             updatedBy: {
                 id: updatedProduct.updatedBy,
                 name: req.user ? req.user.name : req.admin.name // Adjust based on how you're storing/updating user/admin data
@@ -91,7 +89,6 @@ const updateProduct = async (req, res) => {
         return res.status(400).json({ message: 'Error updating product', error: error.message });
     }
 };
-
 
 // Export all functions
 module.exports = { addProduct, getProducts, getProductById, updateProduct };
