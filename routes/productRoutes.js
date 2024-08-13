@@ -1,27 +1,19 @@
 const express = require('express');
 const { addProduct, getProducts, getProductById, updateProduct } = require('../controllers/productController');
 const protect = require('../middleware/authMiddleware');
+
 const router = express.Router();
 
-// Admin adds a new product (protected route)
+// Route to add a new product
 router.post('/add', protect, addProduct);
 
-// Admin updates a product (protected route)
-router.put('/update/:id', protect, updateProduct);
-
-// User views all products
+// Route to get all products
 router.get('/', getProducts);
 
-// User views a single product by ID
-router.get('/:id', getProductById);
+// Route to get a product by productId
+router.get('/:productId', getProductById);
 
-// Admin updates a product (protected route)
-router.put('/update/:id', protect, updateProduct);
-
-router.post('/products', (req, res) => {
-    const { id } = req.body;
-    // Use id here
-});
-
+// Route to update a product by productId
+router.put('/update/:productId', protect, updateProduct);
 
 module.exports = router;
