@@ -5,24 +5,20 @@ const Admin = require('../models/admin');
 const protect = async (req, res, next) => {
     let token;
 
-    // Check for token in headers
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // Get token from header
             token = req.headers.authorization.split(' ')[1];
-
-            // Verify token
+            console.log('Token received:', token); // Debugging line
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            // Attach user to request
-            req.user = await User.findById(decoded.id).select('-password'); // Exclude password field
+            console.log('Decoded token:', decoded); // Debugging line
+            req.user = await User.findById(decoded.id).select('-password');
             next();
         } catch (error) {
+            console.error('Token verification failed:', error); // Debugging line
             res.status(401).json({ message: 'Not authorized, token failed' });
         }
     } else {
         res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
-
 module.exports = protect;
