@@ -2,6 +2,7 @@ const Product = require('../models/product');
 const User = require('../models/user'); // Import User model
 const mongoose = require('mongoose');
 
+
 // Add a new product
 const addProduct = async (req, res) => {
     const { name, price, productId } = req.body;
@@ -86,6 +87,50 @@ const updateProduct = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+// Add a product to the user's list
+const addToList = async (req, res) => {
+    const { productId } = req.body;
+    const userId = req.user._id; // Assuming user is authenticated and their ID is in req.user
+
+    try {
+        const product = await Product.findOne({ productId });
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if product already in the user's list
+        const alreadyInList = user.productList.find(
+            (item) => item.productId.toString() === product._id.toString()
+        );
+
+        if (alreadyInList) {
+            return res.status(400).json({ message: 'Product already in your list' });
+        }
+
+        // Add product to the user's list
+        user.productList.push({
+            productId: product._id,
+            name: product.name,
+            price: product.price,
+        });
+
+        await user.save();
+
+        res.status(201).json({ message: 'Product added to your list', productList: user.productList });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+module.exports = { addToList };
 
 // Export all functions
 module.exports = { addProduct, getProducts, getProductById, updateProduct };
