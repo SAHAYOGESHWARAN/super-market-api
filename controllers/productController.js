@@ -51,7 +51,7 @@ const updateProduct = async (req, res) => {
     const { productId } = req.params;
 
     try {
-        // Find the product by its productId
+        // Find the product by its productId (ensure that productId is a unique identifier in your schema)
         const product = await Product.findOne({ productId });
 
         if (!product) {
@@ -86,7 +86,6 @@ const updateProduct = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
-
 
 // Export all functions
 module.exports = { addProduct, getProducts, getProductById, updateProduct };
