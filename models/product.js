@@ -1,15 +1,24 @@
 const mongoose = require('mongoose');
 
-const ProductSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    price: { type: Number, required: true },
-    productId: { type: String, required: true, unique: true }, // Change _id to productId
-    updatedBy: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', 
-        required: false 
+const productSchema = mongoose.Schema(
+    {
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+        productId: { type: String, required: true, unique: true },
+        updatedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // or 'Admin', depending on who updates
+        },
+        updatedAt: {
+            type: Date,
+            default: Date.now,
+        },
     },
-    updatedAt: { type: Date, default: Date.now },
-});
+    {
+        timestamps: true,
+    }
+);
 
-module.exports = mongoose.model('Product', ProductSchema);
+const Product = mongoose.model('Product', productSchema);
+
+module.exports = Product;
