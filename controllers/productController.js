@@ -1,6 +1,8 @@
 const Product = require('../models/product');
 const User = require('../models/user'); // Import User model
 const Admin = require('../models/admin'); // Import Admin model (if applicable)
+const mongoose = require('mongoose');
+
 
 // Add a new product
 const addProduct = async (req, res) => {
@@ -47,7 +49,7 @@ const getProductById = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; // Get the product ID from URL parameters
 
     // Check if the provided id is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -55,12 +57,14 @@ const updateProduct = async (req, res) => {
     }
 
     try {
+        // Find the product by the ID from URL parameters
         const product = await Product.findById(id);
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
+        // Update product details
         product.name = req.body.name || product.name;
         product.price = req.body.price || product.price;
 
@@ -68,15 +72,18 @@ const updateProduct = async (req, res) => {
         product.updatedBy = req.user ? req.user._id : req.admin._id;
         product.updatedAt = Date.now();
 
+        // Save the updated product
         const updatedProduct = await product.save();
 
+        // Send response with updated product details
         res.json({
             _id: updatedProduct._id,
             name: updatedProduct.name,
             price: updatedProduct.price,
+            productId: updatedProduct.productId,
             updatedBy: {
-                id: product.updatedBy,
-                name: product.updatedByName // You can populate this field as per your requirement
+                id: updatedProduct.updatedBy,
+                name: req.user ? req.user.name : req.admin.name // Adjust based on how you're storing/updating user/admin data
             },
             updatedAt: updatedProduct.updatedAt,
         });

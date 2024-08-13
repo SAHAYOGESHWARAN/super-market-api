@@ -18,4 +18,10 @@ router.get('/:id', getProductById);
 // Admin updates a product (protected route)
 router.put('/update/:id', protect, updateProduct);
 
+router.post('/products', (req, res) => {
+    const { id } = req.body;
+    // Use id here
+});
+
+
 module.exports = router;
